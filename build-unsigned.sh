@@ -25,6 +25,11 @@ rm -rf Payload
 echo "✓ Cleaned"
 echo ""
 
+echo "Step 2: Generating Xcode project..."
+swift package generate-xcodeproj
+echo "✓ Project generated"
+echo ""
+
 # Determine project file to use
 if [ -d "${APP_NAME}.xcworkspace" ]; then
   PROJECT_FLAG="-workspace ${APP_NAME}.xcworkspace"
@@ -35,7 +40,7 @@ else
   exit 1
 fi
 
-echo "Step 2: Building for iOS (ARM64) without code signing..."
+echo "Step 3: Building for iOS (ARM64) without code signing..."
 xcodebuild \
   $PROJECT_FLAG \
   -scheme "${APP_NAME}" \
@@ -57,7 +62,7 @@ else
 fi
 echo ""
 
-echo "Step 3: Creating unsigned IPA structure..."
+echo "Step 4: Creating unsigned IPA structure..."
 if [ -d "$BUILD_PRODUCTS/${APP_NAME}.app" ]; then
   mkdir -p Payload
   cp -r "$BUILD_PRODUCTS/${APP_NAME}.app" Payload/
@@ -68,7 +73,7 @@ else
 fi
 echo ""
 
-echo "Step 4: Creating IPA archive..."
+echo "Step 5: Creating IPA archive..."
 zip -r -q "$OUTPUT_DIR/${IPA_NAME}.ipa" Payload/
 rm -rf Payload
 
