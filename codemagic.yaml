@@ -13,10 +13,6 @@ workflows:
         script: |
           brew install swiftlint
 
-      - name: Generate Xcode project
-        script: |
-          swift package generate-xcodeproj
-
       - name: Setup build environment
         script: |
           mkdir -p build
@@ -27,19 +23,8 @@ workflows:
           BUILD_DIR="build"
           DERIVED_DATA="$BUILD_DIR/DerivedData"
           
-          # Check if workspace exists, otherwise use project
-          if [ -d "GoogleTVRemote.xcworkspace" ]; then
-            PROJECT_FLAG="-workspace GoogleTVRemote.xcworkspace"
-          elif [ -d "GoogleTVRemote.xcodeproj" ]; then
-            PROJECT_FLAG="-project GoogleTVRemote.xcodeproj"
-          else
-            echo "Error: No Xcode project or workspace found."
-            exit 1
-          fi
-          
           # Build for iOS using xcodebuild without code signing
           xcodebuild \
-            $PROJECT_FLAG \
             -scheme GoogleTVRemote \
             -configuration Release \
             -derivedDataPath "$DERIVED_DATA" \
@@ -80,27 +65,12 @@ workflows:
       cache_paths:
         - $HOME/Library/Developer/Xcode/DerivedData
     scripts:
-      - name: Generate Xcode project
-        script: |
-          swift package generate-xcodeproj
-
       - name: Build for simulator
         script: |
           BUILD_DIR="build"
           DERIVED_DATA="$BUILD_DIR/DerivedData"
           
-          # Check if workspace exists, otherwise use project
-          if [ -d "GoogleTVRemote.xcworkspace" ]; then
-            PROJECT_FLAG="-workspace GoogleTVRemote.xcworkspace"
-          elif [ -d "GoogleTVRemote.xcodeproj" ]; then
-            PROJECT_FLAG="-project GoogleTVRemote.xcodeproj"
-          else
-            echo "Error: No Xcode project or workspace found."
-            exit 1
-          fi
-          
           xcodebuild \
-            $PROJECT_FLAG \
             -scheme GoogleTVRemote \
             -configuration Debug \
             -sdk iphonesimulator \
