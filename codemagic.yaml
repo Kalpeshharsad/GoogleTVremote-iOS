@@ -23,9 +23,19 @@ workflows:
           BUILD_DIR="build"
           DERIVED_DATA="$BUILD_DIR/DerivedData"
           
+          # Check if workspace exists, otherwise use project
+          if [ -d "GoogleTVRemote.xcworkspace" ]; then
+            PROJECT_FLAG="-workspace GoogleTVRemote.xcworkspace"
+          elif [ -d "GoogleTVRemote.xcodeproj" ]; then
+            PROJECT_FLAG="-project GoogleTVRemote.xcodeproj"
+          else
+            echo "Error: No Xcode project or workspace found."
+            exit 1
+          fi
+          
           # Build for iOS using xcodebuild without code signing
           xcodebuild \
-            -workspace GoogleTVRemote.xcworkspace \
+            $PROJECT_FLAG \
             -scheme GoogleTVRemote \
             -configuration Release \
             -derivedDataPath "$DERIVED_DATA" \
@@ -58,18 +68,9 @@ workflows:
     artifacts:
       - build/output/GoogleTVRemote-unsigned.ipa
 
-    publishing:
-      email:
-        recipients:
-          - $CM_EMAIL
-        notify:
-          success: true
-          failure: true
-
   ios-simulator-build:
     name: iOS Simulator Build (Testing)
     environment:
-      ios: latest
       xcode: latest
     cache:
       cache_paths:
@@ -80,8 +81,18 @@ workflows:
           BUILD_DIR="build"
           DERIVED_DATA="$BUILD_DIR/DerivedData"
           
+          # Check if workspace exists, otherwise use project
+          if [ -d "GoogleTVRemote.xcworkspace" ]; then
+            PROJECT_FLAG="-workspace GoogleTVRemote.xcworkspace"
+          elif [ -d "GoogleTVRemote.xcodeproj" ]; then
+            PROJECT_FLAG="-project GoogleTVRemote.xcodeproj"
+          else
+            echo "Error: No Xcode project or workspace found."
+            exit 1
+          fi
+          
           xcodebuild \
-            -workspace GoogleTVRemote.xcworkspace \
+            $PROJECT_FLAG \
             -scheme GoogleTVRemote \
             -configuration Debug \
             -sdk iphonesimulator \

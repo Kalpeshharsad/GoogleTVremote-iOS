@@ -25,9 +25,19 @@ rm -rf Payload
 echo "✓ Cleaned"
 echo ""
 
+# Determine project file to use
+if [ -d "${APP_NAME}.xcworkspace" ]; then
+  PROJECT_FLAG="-workspace ${APP_NAME}.xcworkspace"
+elif [ -d "${APP_NAME}.xcodeproj" ]; then
+  PROJECT_FLAG="-project ${APP_NAME}.xcodeproj"
+else
+  echo "Error: No ${APP_NAME}.xcworkspace or ${APP_NAME}.xcodeproj found."
+  exit 1
+fi
+
 echo "Step 2: Building for iOS (ARM64) without code signing..."
 xcodebuild \
-  -workspace "${APP_NAME}.xcworkspace" \
+  $PROJECT_FLAG \
   -scheme "${APP_NAME}" \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
