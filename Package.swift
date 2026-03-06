@@ -17,11 +17,6 @@ let package = Package(
             name: "GoogleTVRemote",
             dependencies: [],
             path: "GoogleTVRemote"
-        ),
-        .testTarget(
-            name: "GoogleTVRemoteTests",
-            dependencies: ["GoogleTVRemote"],
-            path: "GoogleTVRemoteTests"
         )
     ]
 )
