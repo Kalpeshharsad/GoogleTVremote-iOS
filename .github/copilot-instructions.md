@@ -1,6 +1,12 @@
 # GoogleTV Remote Control iOS App
 
-Unsigned iOS remote control app for Google TV with ADB network connection.
+Unsigned iOS remote control app for Google TV with ADB network connection. Builds without Developer account for TrollStore/jailbroken installation.
+
+## Key Files for Unsigned Builds
+
+- **codemagic.yaml** - Cloud build configuration for Codemagic.io
+- **build-unsigned.sh** - Local build script for creating unsigned IPA
+- **UNSIGNED_BUILD_GUIDE.md** - Complete guide for building and installing on TrollStore
 
 ## Project Setup Checklist
 
@@ -12,6 +18,9 @@ Unsigned iOS remote control app for Google TV with ADB network connection.
 - [x] Create project configuration files
 - [x] Verify project compiles
 - [x] Create README documentation
+- [x] Create unsigned build script
+- [x] Create Codemagic configuration
+- [x] Create comprehensive build guide
 
 ## Project Overview
 

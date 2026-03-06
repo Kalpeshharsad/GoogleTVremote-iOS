@@ -1,10 +1,12 @@
 # Google TV Remote Control iOS App
 
-An unsigned iOS remote control application for Google TV devices using ADB (Android Debug Bridge) network connection over TCP/IP.
+An unsigned iOS remote control application for Google TV devices using ADB (Android Debug Bridge) network connection over TCP/IP. Build and install without a Developer account using TrollStore or Codemagic.io.
 
 ## Features
 
 - **ADB over Network** - Connect to Google TV devices via TCP/IP without USB cables
+- **Unsigned Builds** - Built without code signing for TrollStore and jailbroken iPhone installation
+- **Cloud Builds** - Automated builds via Codemagic.io (no Developer account needed)
 - **Full Remote Control** - Control all major remote functions:
   - Navigation (Up, Down, Left, Right, Enter)
   - Power control
@@ -57,20 +59,71 @@ GoogleTVRemote/
 - macOS 11.0 or later
 - Swift 5.5+
 
+### For Unsigned Builds (TrollStore)
+
+- Jailbroken iPhone with TrollStore installed
+- Codemagic.io account (for cloud builds, optional)
+- Or local macOS with Xcode for local builds
+
+### No Developer Account Required
+
+This project supports building without an Apple Developer account:
+- Build locally with `build-unsigned.sh`
+- Build in cloud with Codemagic.io
+- Install directly via TrollStore on jailbroken devices
+
 ## Building and Running
+
+### Quick Start: Unsigned Build for TrollStore
+
+If you have a jailbroken iPhone, you can build an unsigned app for TrollStore:
+
+```bash
+chmod +x build-unsigned.sh
+./build-unsigned.sh
+```
+
+This creates an unsigned IPA at `build/output/GoogleTVRemote-unsigned.ipa` ready for TrollStore installation.
+
+**See [UNSIGNED_BUILD_GUIDE.md](UNSIGNED_BUILD_GUIDE.md) for detailed TrollStore installation instructions.**
 
 ### Using Xcode
 
-1. Open the project in Xcode:
+1. Create an Xcode project with the provided Swift files:
    ```bash
-   open GoogleTVRemote.xcodeproj
+   open -a Xcode
+   # File > New > Project > App
+   # Product Name: GoogleTVRemote
+   # Team: None
+   # Language: Swift
+   # Interface: SwiftUI
    ```
 
-2. Select your target device or simulator
+2. Add source files from `GoogleTVRemote/` folder
 
 3. Build and run:
    - Press `Cmd + R` or click the Run button
    - Select your iOS device from the destination menu
+
+### Using Codemagic.io (Cloud Builds)
+
+For automated builds without a developer account:
+
+1. Push to GitHub:
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/RemoteControlApp-iOS.git
+   git push -u origin main
+   ```
+
+2. Sign up at [codemagic.io](https://codemagic.io)
+
+3. Connect your GitHub repository
+
+4. Select the `ios-unsigned-build` workflow from `codemagic.yaml`
+
+5. Download the built unsigned IPA from artifacts
+
+**See [UNSIGNED_BUILD_GUIDE.md](UNSIGNED_BUILD_GUIDE.md) for complete Codemagic setup.**
 
 ### Using SwiftUI Preview
 

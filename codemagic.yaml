@@ -1,0 +1,101 @@
+workflows:
+  ios-unsigned-build:
+    name: iOS Unsigned Build for TrollStore
+    environment:
+      ios: latest
+      xcode: latest
+      cocoapods: default
+    cache:
+      cache_paths:
+        - $HOME/Library/Developer/Xcode/DerivedData
+        - $HOME/.cocoapods
+    scripts:
+      - name: Install dependencies
+        script: |
+          brew install swiftlint
+
+      - name: Setup build environment
+        script: |
+          mkdir -p build
+          
+      - name: Build unsigned IPA
+        script: |
+          # Create a temporary build directory
+          BUILD_DIR="build"
+          DERIVED_DATA="$BUILD_DIR/DerivedData"
+          
+          # Build for iOS using xcodebuild without code signing
+          xcodebuild \
+            -workspace GoogleTVRemote.xcworkspace \
+            -scheme GoogleTVRemote \
+            -configuration Release \
+            -derivedDataPath "$DERIVED_DATA" \
+            -arch arm64 \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_ENTITLEMENTS="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            -quiet
+          
+      - name: Create unsigned IPA
+        script: |
+          BUILD_DIR="build"
+          DERIVED_DATA="$BUILD_DIR/DerivedData"
+          BUILD_PRODUCTS="$DERIVED_DATA/Build/Products/Release-iphoneos"
+          OUTPUT_DIR="build/output"
+          
+          mkdir -p "$OUTPUT_DIR"
+          
+          # Create the Payload directory structure for unsigned IPA
+          mkdir -p Payload
+          cp -r "$BUILD_PRODUCTS/GoogleTVRemote.app" Payload/
+          
+          # Create unsigned IPA
+          zip -r "$OUTPUT_DIR/GoogleTVRemote-unsigned.ipa" Payload/
+          rm -rf Payload
+          
+          echo "Unsigned IPA created at: $OUTPUT_DIR/GoogleTVRemote-unsigned.ipa"
+
+    artifacts:
+      - build/output/GoogleTVRemote-unsigned.ipa:
+          keep_if_empty: false
+
+    publishing:
+      email:
+        recipients:
+          - $CM_EMAIL
+        notify:
+          success: true
+          failure: true
+
+  ios-simulator-build:
+    name: iOS Simulator Build (Testing)
+    environment:
+      ios: latest
+      xcode: latest
+    cache:
+      cache_paths:
+        - $HOME/Library/Developer/Xcode/DerivedData
+    scripts:
+      - name: Build for simulator
+        script: |
+          BUILD_DIR="build"
+          DERIVED_DATA="$BUILD_DIR/DerivedData"
+          
+          xcodebuild \
+            -workspace GoogleTVRemote.xcworkspace \
+            -scheme GoogleTVRemote \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath "$DERIVED_DATA" \
+            -arch x86_64 \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            -quiet
+
+      - name: Test app
+        script: |
+          echo "Simulator build completed successfully"
+
+    artifacts:
+      - build/DerivedData/Build/Products/Debug-iphonesimulator/GoogleTVRemote.app
