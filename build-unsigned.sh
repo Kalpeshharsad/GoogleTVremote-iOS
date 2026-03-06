@@ -28,6 +28,7 @@ echo ""
 echo "Step 2: Building for iOS (ARM64) without code signing..."
 xcodebuild \
   -scheme "${APP_NAME}" \
+  -destination 'generic/platform=iOS' \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
   -arch arm64 \

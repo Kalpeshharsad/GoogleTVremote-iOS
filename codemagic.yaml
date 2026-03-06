@@ -26,6 +26,7 @@ workflows:
           # Build for iOS using xcodebuild without code signing
           xcodebuild \
             -scheme GoogleTVRemote \
+            -destination 'generic/platform=iOS' \
             -configuration Release \
             -derivedDataPath "$DERIVED_DATA" \
             -arch arm64 \
@@ -72,6 +73,7 @@ workflows:
           
           xcodebuild \
             -scheme GoogleTVRemote \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
             -configuration Debug \
             -sdk iphonesimulator \
             -derivedDataPath "$DERIVED_DATA" \
