@@ -31,7 +31,6 @@ xcodebuild \
   -destination 'generic/platform=iOS' \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
-  -arch arm64 \
   CODE_SIGN_IDENTITY="" \
   CODE_SIGNING_REQUIRED=NO \
   CODE_SIGN_ENTITLEMENTS="" \

@@ -1,0 +1,54 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module": ["<GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module>"]
+  "test": ["<GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module>"]
+default: "main"
+nodes:
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemote.swiftmodule.o":
+    tool: shell
+    inputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules/GoogleTVRemote.swiftmodule"]
+    outputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemote.swiftmodule.o"]
+    description: "Wrapping AST for GoogleTVRemote for debugging"
+    args: ["/usr/share/swift/usr/bin/swiftc","-modulewrap","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules/GoogleTVRemote.swiftmodule","-o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemote.swiftmodule.o","-target","x86_64-unknown-linux-gnu"]
+
+  "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ContentView.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/GoogleTVRemoteApp.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Models/ADBConnection.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Network/ADBClient.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ViewModels/RemoteViewModel.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/ConnectionView.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/RemoteControlView.swift"]
+    outputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/sources"]
+    description: "Write auxiliary file /home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/sources"
+
+  "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/swift-version--1BFCD5C06E9F820A.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/usr/share/swift/usr/bin/swiftc"]
+    outputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/swift-version--1BFCD5C06E9F820A.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/swift-version--1BFCD5C06E9F820A.txt"
+
+  "<GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module>":
+    tool: phony
+    inputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules/GoogleTVRemote.swiftmodule"]
+    outputs: ["<GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module>"]
+
+  "C.GoogleTVRemote-x86_64-unknown-linux-gnu-debug.module":
+    tool: shell
+    inputs: ["/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ContentView.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/GoogleTVRemoteApp.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Models/ADBConnection.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Network/ADBClient.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ViewModels/RemoteViewModel.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/ConnectionView.swift","/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/RemoteControlView.swift","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/swift-version--1BFCD5C06E9F820A.txt","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/sources"]
+    outputs: ["/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView.swift.o","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules/GoogleTVRemote.swiftmodule"]
+    description: "Compiling Swift Module 'GoogleTVRemote' (7 sources)"
+    args: ["/usr/share/swift/usr/bin/swiftc","-module-name","GoogleTVRemote","-emit-dependencies","-emit-module","-emit-module-path","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules/GoogleTVRemote.swiftmodule","-output-file-map","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/output-file-map.json","-parse-as-library","-incremental","-c","@/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/sources","-I","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/Modules","-target","x86_64-unknown-linux-gnu","-enable-batch-mode","-index-store-path","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/index/store","-Onone","-enable-testing","-j8","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/ModuleCache","-parseable-output","-parse-as-library","-color-diagnostics","-swift-version","5","-g","-Xcc","-fPIC","-Xcc","-g","-Xcc","-fno-omit-frame-pointer"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/","/home/kal/Desktop/RemoteControlApp-iOS/Package.swift","/home/kal/Desktop/RemoteControlApp-iOS/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

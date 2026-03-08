@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/master.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ContentView.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ContentView.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/GoogleTVRemoteApp.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/GoogleTVRemoteApp.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Models/ADBConnection.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBConnection.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Network/ADBClient.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ADBClient.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/ViewModels/RemoteViewModel.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteViewModel.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/ConnectionView.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/ConnectionView.swiftdeps"
+  },
+  "/home/kal/Desktop/RemoteControlApp-iOS/GoogleTVRemote/Views/RemoteControlView.swift": {
+    "dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView.d",
+    "object": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView.swift.o",
+    "swiftmodule": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView~partial.swiftmodule",
+    "swift-dependencies": "/home/kal/Desktop/RemoteControlApp-iOS/.build/x86_64-unknown-linux-gnu/debug/GoogleTVRemote.build/RemoteControlView.swiftdeps"
+  }
+}

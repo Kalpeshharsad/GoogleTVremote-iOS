@@ -15,6 +15,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    let viewModel = RemoteViewModel()
-    ContentView(viewModel: viewModel)
+    ContentView(viewModel: RemoteViewModel())
 }
