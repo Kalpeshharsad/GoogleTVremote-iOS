@@ -31,6 +31,9 @@ xcodebuild \
   -destination 'generic/platform=iOS' \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
+  -sdk iphoneos \
+  -IPHONEOS_DEPLOYMENT_TARGET 15.0 \
+  -SWIFT_VERSION 5.0 \
   CODE_SIGN_IDENTITY="" \
   CODE_SIGNING_REQUIRED=NO \
   CODE_SIGN_ENTITLEMENTS="" \

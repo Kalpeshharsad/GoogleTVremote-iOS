@@ -121,11 +121,17 @@ struct ConnectionView: View {
                 
                 Section(footer: Text("Make sure your device's ADB TCP/IP port is enabled (default: 5555).")) {
                     Button(action: addConnection) {
-                        Text("Save Connection")
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(.white)
+                        HStack {
+                            Spacer()
+                            Text("Save Connection")
+                                .fontWeight(.semibold)
+                            Spacer()
+                        }
+                        .padding(.vertical, 8)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                     }
-                    .buttonStyle(.filled)
                     .disabled(newConnectionName.isEmpty || newConnectionHost.isEmpty)
                 }
             }
