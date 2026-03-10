@@ -1,4 +1,4 @@
-configurations:
+workflows:
   ios-unsigned:
     name: iOS Unsigned (Jailbreak)
     environment:
