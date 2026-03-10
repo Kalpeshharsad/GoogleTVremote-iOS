@@ -12,8 +12,8 @@ workflows:
           flutter packages pub get
       - name: Build iOS App Bundle (No Code Signing)
         script: |
-          flutter build ios --release --no-codesign \
-            --xcconfig-overrides=ios/Flutter/signing.xcconfig
+          # Settings are now injected into ios/Flutter/Release.xcconfig
+          flutter build ios --release --no-codesign
       - name: Create Proper IPA for TrollStore
         script: |
           cd $CM_BUILD_DIR/build/ios/iphoneos
