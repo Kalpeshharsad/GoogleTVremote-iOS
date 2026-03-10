@@ -7,8 +7,13 @@ workflows:
       - name: Build Unsigned IPA
         script: | 
           set -e
-          flutter build ios --release --no-codesign \
-            --xcargs="CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=''"
+          
+          # Force unsigned build via environment variables
+          export CODE_SIGNING_ALLOWED=NO
+          export CODE_SIGNING_REQUIRED=NO
+          export CODE_SIGN_IDENTITY=""
+          
+          flutter build ios --release --no-codesign
           
           # Create Payload and IPA
           rm -rf build/ios/iphoneos/Payload
