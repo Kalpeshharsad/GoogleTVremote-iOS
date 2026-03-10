@@ -16,4 +16,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - ${kalpesh.harsad@gmail.com}
+          - kalpesh.harsad@gmail.com
