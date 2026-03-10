@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:flutter_adb/flutter_adb.dart';
+import 'package:flutter_adb/adb_connection.dart';
+import 'package:flutter_adb/adb_crypto.dart';
+import 'package:flutter_adb/adb_stream.dart';
 
 class ADBService {
   AdbConnection? _connection;
