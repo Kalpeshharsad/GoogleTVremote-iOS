@@ -10,28 +10,10 @@ workflows:
       - name: Flutter dependencies
         script: |
           flutter packages pub get
-      - name: Patch Xcode Project for Unsigned Build
-        script: |
-          # Force unsigned build via environment variables (moved from vars to bypass validation)
-          export CODE_SIGNING_ALLOWED=NO
-          export CODE_SIGNING_REQUIRED=NO
-          export CODE_SIGN_IDENTITY=""
-          
-          # Remove hardcoded signing identities and force manual/unsigned style
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "";/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = "iPhone Developer";/CODE_SIGN_IDENTITY = "";/g' ios/Runner.xcodeproj/project.pbxproj
-          
-          # Check if patching worked
-          grep "CODE_SIGN" ios/Runner.xcodeproj/project.pbxproj
       - name: Build iOS App Bundle (No Code Signing)
         script: |
-          # Ensure env vars are also available here
-          export CODE_SIGNING_ALLOWED=NO
-          export CODE_SIGNING_REQUIRED=NO
-          export CODE_SIGN_IDENTITY=""
-          
-          flutter build ios --release --no-codesign
+          flutter build ios --release --no-codesign \
+            --xcconfig-overrides=ios/Flutter/signing.xcconfig
       - name: Create Proper IPA for TrollStore
         script: |
           cd $CM_BUILD_DIR/build/ios/iphoneos
