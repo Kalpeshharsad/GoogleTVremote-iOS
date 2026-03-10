@@ -6,14 +6,13 @@ workflows:
     scripts:
       - name: Build Unsigned IPA
         script: | 
-          flutter build ios --no-codesign
+          set -e
+          flutter build ios --release --no-codesign
+          rm -rf build/ios/iphoneos/Payload
           mkdir -p build/ios/iphoneos/Payload
           cp -r build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/
           cd build/ios/iphoneos
           zip -r premium_app_unsigned.ipa Payload
+          rm -rf Payload
     artifacts:
       - build/ios/iphoneos/*.ipa
-    publishing:
-      email:
-        recipients:
-          - kalpesh.harsad@gmail.com
