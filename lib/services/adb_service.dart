@@ -40,7 +40,7 @@ class ADBService {
       // Open a shell stream to send the command
       final AdbStream stream = await _connection!.openShell();
       await stream.writeString('input keyevent $keyCode\n');
-      await stream.close();
+      stream.close();
     } catch (e) {
       print('Failed to send key event: $e');
     }
