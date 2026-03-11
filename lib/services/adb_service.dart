@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter_adb/adb_connection.dart';
 import 'package:flutter_adb/adb_crypto.dart';
 import 'package:flutter_adb/adb_stream.dart';
+import 'key_service.dart';
+import 'package:pointycastle/export.dart';
 
 class ADBService {
   AdbConnection? _connection;
@@ -11,8 +13,17 @@ class ADBService {
 
   Future<bool> connect(String ip, {int port = 5555}) async {
     try {
-      // Connect to the device using AdbConnection
-      final AdbCrypto crypto = AdbCrypto(); // Automatically generates keys if needed
+      // Load or generate keys
+      var keyPair = await KeyService.loadKeys();
+      if (keyPair == null) {
+        keyPair = AdbCrypto.generateAdbKeyPair();
+        await KeyService.saveKeys(keyPair);
+        print('Generated and saved new ADB keys');
+      } else {
+        print('Loaded existing ADB keys');
+      }
+
+      final AdbCrypto crypto = AdbCrypto(keyPair: keyPair);
       _connection = AdbConnection(ip, port, crypto);
       
       final bool connected = await _connection!.connect();
