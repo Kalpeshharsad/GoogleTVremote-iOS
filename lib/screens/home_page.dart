@@ -12,8 +12,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ADBService _adbService = ADBService();
-  final TextEditingController _ipController = TextEditingController(text: '192.168.1.100');
+  final TextEditingController _ipController = TextEditingController(text: '192.168.1.21');
   bool _isConnecting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-connect on startup
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleConnect();
+    });
+  }
 
   void _handleConnect() async {
     setState(() => _isConnecting = true);
