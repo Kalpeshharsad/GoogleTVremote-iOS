@@ -12,6 +12,7 @@ class KeyService {
   static const String _privateKeyQKey = 'adb_private_key_q';
 
   static Future<AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>?> loadKeys() async {
+    print('KeyService: Loading keys...');
     final prefs = await SharedPreferences.getInstance();
     
     final pubMod = prefs.getString(_publicKeyModulusKey);
@@ -22,32 +23,41 @@ class KeyService {
     final privQ = prefs.getString(_privateKeyQKey);
 
     if (pubMod == null || pubExp == null || privMod == null || privExp == null || privP == null || privQ == null) {
+      print('KeyService: No keys found in storage.');
       return null;
     }
 
-    final publicKey = RSAPublicKey(
-      BigInt.parse(pubMod),
-      BigInt.parse(pubExp),
-    );
+    try {
+      final publicKey = RSAPublicKey(
+        BigInt.parse(pubMod, radix: 16),
+        BigInt.parse(pubExp, radix: 16),
+      );
 
-    final privateKey = RSAPrivateKey(
-      BigInt.parse(privMod),
-      BigInt.parse(privExp),
-      BigInt.parse(privP),
-      BigInt.parse(privQ),
-    );
+      final privateKey = RSAPrivateKey(
+        BigInt.parse(privMod, radix: 16),
+        BigInt.parse(privExp, radix: 16),
+        BigInt.parse(privP, radix: 16),
+        BigInt.parse(privQ, radix: 16),
+      );
 
-    return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(publicKey, privateKey);
+      print('KeyService: Keys loaded successfully.');
+      return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(publicKey, privateKey);
+    } catch (e) {
+      print('KeyService: Error parsing keys: $e');
+      return null;
+    }
   }
 
   static Future<void> saveKeys(AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> keyPair) async {
+    print('KeyService: Saving keys...');
     final prefs = await SharedPreferences.getInstance();
     
-    await prefs.setString(_publicKeyModulusKey, keyPair.publicKey.modulus.toString());
-    await prefs.setString(_publicKeyExponentKey, keyPair.publicKey.publicExponent.toString());
-    await prefs.setString(_privateKeyModulusKey, keyPair.privateKey.modulus.toString());
-    await prefs.setString(_privateKeyExponentKey, keyPair.privateKey.privateExponent.toString());
-    await prefs.setString(_privateKeyPKey, keyPair.privateKey.p.toString());
-    await prefs.setString(_privateKeyQKey, keyPair.privateKey.q.toString());
+    await prefs.setString(_publicKeyModulusKey, keyPair.publicKey.modulus!.toRadixString(16));
+    await prefs.setString(_publicKeyExponentKey, keyPair.publicKey.publicExponent!.toRadixString(16));
+    await prefs.setString(_privateKeyModulusKey, keyPair.privateKey.modulus!.toRadixString(16));
+    await prefs.setString(_privateKeyExponentKey, keyPair.privateKey.privateExponent!.toRadixString(16));
+    await prefs.setString(_privateKeyPKey, keyPair.privateKey.p!.toRadixString(16));
+    await prefs.setString(_privateKeyQKey, keyPair.privateKey.q!.toRadixString(16));
+    print('KeyService: Keys saved.');
   }
 }

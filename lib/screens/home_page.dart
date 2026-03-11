@@ -91,6 +91,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('GTV Remote', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 28)),
             const Text('Remote Control', style: TextStyle(color: Colors.white60)),
+            const SizedBox(height: 4),
+            Text('ID: ${_adbService.fingerprint}', style: const TextStyle(color: Colors.white24, fontSize: 10, fontFamily: 'monospace')),
           ],
         ),
         Icon(

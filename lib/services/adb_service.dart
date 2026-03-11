@@ -4,12 +4,16 @@ import 'package:flutter_adb/adb_crypto.dart';
 import 'package:flutter_adb/adb_stream.dart';
 import 'key_service.dart';
 import 'package:pointycastle/export.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class ADBService {
   AdbConnection? _connection;
   bool _isConnected = false;
+  String? _fingerprint;
 
   bool get isConnected => _isConnected;
+  String get fingerprint => _fingerprint ?? 'Pending...';
 
   Future<bool> connect(String ip, {int port = 5555}) async {
     try {
@@ -26,6 +30,10 @@ class ADBService {
       final AdbCrypto crypto = AdbCrypto(keyPair: keyPair);
       _connection = AdbConnection(ip, port, crypto);
       
+      // Update fingerprint
+      _calculateFingerprint(crypto);
+      print('Current Fingerprint: $_fingerprint');
+      
       final bool connected = await _connection!.connect();
       
       if (connected) {
@@ -38,6 +46,23 @@ class ADBService {
       _isConnected = false;
     }
     return false;
+  }
+
+  void _calculateFingerprint(AdbCrypto crypto) {
+    try {
+      final payload = crypto.getAdbPublicKeyPayload();
+      // ADB fingerprint is MD5 of the public key payload (usually the base64 part)
+      // The payload is: base64(adb_pub_key) + " " + "unknown@unknown\0"
+      // We want the MD5 of the raw adb_pub_key bytes if possible, 
+      // but matching the UI's colon-separated format.
+      
+      // For simplicity in debugging stability, we'll just MD5 the whole payload
+      // and format it as colon-separated hex.
+      final hash = md5.convert(payload).bytes;
+      _fingerprint = hash.map((e) => e.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');
+    } catch (e) {
+      _fingerprint = 'Error: $e';
+    }
   }
 
   Future<void> disconnect() async {
