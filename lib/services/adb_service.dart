@@ -122,6 +122,30 @@ class ADBService {
     }
   }
 
+  Future<void> sendText(String text) async {
+    if (!_isConnected || _connection == null) return;
+    try {
+      final AdbStream stream = await _connection!.openShell();
+      // Escape spaces for ADB input text
+      final escapedText = text.replaceAll(' ', '%s');
+      await stream.writeString('input text "$escapedText"\n');
+      stream.close();
+    } catch (e) {
+      print('Failed to send text: $e');
+    }
+  }
+
+  Future<void> setBrightness(int value) async {
+    if (!_isConnected || _connection == null) return;
+    try {
+      final AdbStream stream = await _connection!.openShell();
+      await stream.writeString('settings put system screen_brightness $value\n');
+      stream.close();
+    } catch (e) {
+      print('Failed to set brightness: $e');
+    }
+  }
+
   // KeyCodes for Google TV
   static const int KEYCODE_UP = 19;
   static const int KEYCODE_DOWN = 20;

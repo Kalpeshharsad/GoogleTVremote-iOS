@@ -13,7 +13,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ADBService _adbService = ADBService();
   final TextEditingController _ipController = TextEditingController(text: '192.168.1.21');
+  final TextEditingController _textController = TextEditingController();
   bool _isConnecting = false;
+  double _brightness = 127;
 
   @override
   void initState() {
@@ -38,6 +40,60 @@ class _HomePageState extends State<HomePage> {
         const SnackBar(content: Text('Connection failed. Check IP and Developer Options.')),
       );
     }
+  }
+
+  void _showKeyboardDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        contentPadding: EdgeInsets.zero,
+        content: GlassCard(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('TV Keyboard', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _textController,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Type something...',
+                    fillColor: Colors.white10,
+                    filled: true,
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  onSubmitted: (val) {
+                    _adbService.sendText(val);
+                    _textController.clear();
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        _adbService.sendText(_textController.text);
+                        _textController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Send'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -73,6 +129,8 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 40),
                   _buildChannelControls(),
                   const SizedBox(height: 40),
+                  _buildBrightnessControl(),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -99,6 +157,11 @@ class _HomePageState extends State<HomePage> {
           _adbService.isConnected ? Icons.connected_tv_rounded : Icons.tv_off_rounded,
           color: _adbService.isConnected ? AppTheme.accentColor : Colors.white24,
           size: 32,
+        ),
+        const SizedBox(width: 10),
+        IconButton(
+          icon: const Icon(Icons.keyboard_outlined, color: Colors.white70),
+          onPressed: _showKeyboardDialog,
         ),
       ],
     );
@@ -231,6 +294,46 @@ class _HomePageState extends State<HomePage> {
                 const Icon(Icons.swap_vert_rounded, size: 20, color: Colors.white24),
                 IconButton(icon: const Icon(Icons.keyboard_arrow_up_rounded), onPressed: () => _adbService.sendKeyEvent(ADBService.KEYCODE_CHANNEL_UP)),
               ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBrightnessControl() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Icon(Icons.brightness_low_rounded, size: 16, color: Colors.white24),
+            const Text('BRIGHTNESS', style: TextStyle(fontSize: 10, color: Colors.white24, fontWeight: FontWeight.bold, letterSpacing: 2)),
+            const Icon(Icons.brightness_high_rounded, size: 16, color: Colors.white24),
+          ],
+        ),
+        const SizedBox(height: 8),
+        GlassCard(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: AppTheme.primaryColor,
+                inactiveTrackColor: Colors.white10,
+                thumbColor: Colors.white,
+                overlayColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+              ),
+              child: Slider(
+                value: _brightness,
+                min: 0,
+                max: 255,
+                onChanged: (val) {
+                  setState(() => _brightness = val);
+                },
+                onChangeEnd: (val) {
+                  _adbService.setBrightness(val.toInt());
+                },
+              ),
             ),
           ),
         ),
