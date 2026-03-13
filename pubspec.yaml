@@ -37,6 +37,7 @@ dependencies:
   permission_handler: ^11.3.1
   shared_preferences: ^2.5.2
   pointycastle: ^3.9.1
+  multicast_dns: ^0.3.3
 
 dev_dependencies:
   flutter_test:

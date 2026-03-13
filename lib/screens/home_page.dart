@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../widgets/glass_card.dart';
 import '../theme/app_theme.dart';
 import '../services/adb_service.dart';
+import '../services/discovery_service.dart';
+import '../services/storage_service.dart';
+import '../models/tv_device.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,23 +15,63 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ADBService _adbService = ADBService();
-  final TextEditingController _ipController = TextEditingController(text: '192.168.1.21');
+  final DiscoveryService _discoveryService = DiscoveryService();
+  final StorageService _storageService = StorageService();
+  
+  final TextEditingController _ipController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
+  
   bool _isConnecting = false;
   double _brightness = 127;
+  
+  List<TvDevice> _savedDevices = [];
+  List<TvDevice> _discoveredDevices = [];
 
   @override
   void initState() {
     super.initState();
+    _loadSavedDevices();
+    _discoveryService.devicesStream.listen((devices) {
+      if (mounted) {
+        setState(() => _discoveredDevices = devices);
+      }
+    });
+    _discoveryService.startDiscovery();
+    
     // Auto-connect on startup
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleConnect();
     });
   }
 
-  void _handleConnect() async {
+  @override
+  void dispose() {
+    _discoveryService.stopDiscovery();
+    _ipController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadSavedDevices() async {
+    final devices = await _storageService.getSavedDevices();
+    setState(() {
+      _savedDevices = devices;
+      if (devices.isNotEmpty && _ipController.text.isEmpty) {
+        _ipController.text = devices.first.ipAddress;
+      }
+    });
+  }
+
+  void _handleConnect([String? ip]) async {
+    final ipToConnect = ip ?? _ipController.text;
+    if (ipToConnect.isEmpty) return;
+
+    if (ip != null) {
+      _ipController.text = ip;
+    }
+
     setState(() => _isConnecting = true);
-    final success = await _adbService.connect(_ipController.text);
+    final success = await _adbService.connect(ipToConnect);
     if (!mounted) return;
     setState(() => _isConnecting = false);
     
@@ -36,11 +79,109 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Connected to TV')),
       );
+      // Save the connected device
+      String name = 'Android TV ($ipToConnect)';
+      // Try to find a better name if it was discovered
+      try {
+        final discovered = _discoveredDevices.firstWhere((d) => d.ipAddress == ipToConnect);
+        name = discovered.name;
+      } catch (_) {}
+      
+      await _storageService.saveDevice(TvDevice(ipAddress: ipToConnect, name: name));
+      _loadSavedDevices();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Connection failed. Check IP and Developer Options.')),
       );
     }
+  }
+
+  void _showDevicesBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: AppTheme.backgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('TV Devices', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  if (_discoveredDevices.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('DISCOVERED ON NETWORK', style: TextStyle(color: AppTheme.primaryColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    ),
+                    ..._discoveredDevices.map((device) => _buildDeviceItem(device, Icons.wifi_rounded)),
+                    const SizedBox(height: 16),
+                  ],
+                  if (_savedDevices.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('SAVED DEVICES', style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    ),
+                    ..._savedDevices.map((device) => _buildDeviceItem(device, Icons.tv_rounded, isSaved: true)),
+                  ],
+                  if (_discoveredDevices.isEmpty && _savedDevices.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Center(
+                        child: Text('No devices found or saved.\nMake sure your TV is on the same Wi-Fi network.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white54)),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeviceItem(TvDevice device, IconData icon, {bool isSaved = false}) {
+    return Card(
+      color: Colors.white.withValues(alpha: 0.05),
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: Colors.white10)),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.white70),
+        title: Text(device.name, style: const TextStyle(color: Colors.white)),
+        subtitle: Text(device.ipAddress, style: const TextStyle(color: Colors.white54)),
+        trailing: isSaved ? IconButton(
+          icon: const Icon(Icons.delete_outline, color: Colors.white30),
+          onPressed: () {
+             _storageService.removeDevice(device.ipAddress);
+             _loadSavedDevices();
+             Navigator.pop(context);
+          },
+        ) : null,
+        onTap: () {
+          Navigator.pop(context);
+          _handleConnect(device.ipAddress);
+        },
+      ),
+    );
   }
 
   void _showKeyboardDialog() {
@@ -171,9 +312,14 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: TextField(
                 controller: _ipController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'TV IP Address',
                   border: InputBorder.none,
+                  hintStyle: const TextStyle(color: Colors.white30),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.white54),
+                    onPressed: _showDevicesBottomSheet,
+                  ),
                 ),
                 style: const TextStyle(color: Colors.white),
               ),
@@ -185,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : IconButton(
-                    onPressed: _handleConnect,
+                    onPressed: () => _handleConnect(),
                     icon: Icon(Icons.sync_rounded, color: AppTheme.primaryColor),
                   ),
           ],
