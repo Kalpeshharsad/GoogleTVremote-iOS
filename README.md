@@ -39,6 +39,7 @@ Antigravity is a state-of-the-art, premium Google TV remote application for iOS,
 1.  Clone the repository:
     ```bash
     git clone https://github.com/Kalpeshharsad/GoogleTVremote-iOS.git
+    cd GoogleTVremote-iOS
     ```
 2.  Install dependencies:
     ```bash
